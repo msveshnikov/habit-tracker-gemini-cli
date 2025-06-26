@@ -43,3 +43,5 @@ This section outlines potential design choices and technical considerations for 
 - Theming (light/dark mode).
 
 # TODO
+
+- improve design

@@ -17,24 +17,209 @@ body {
 }
 
 #root {
-  min-height: 100vh;
-  /* Changed to grid or flex for main content + sidebar */
-  display: flex;
-  flex-direction: column; /* Allows header/footer to be full width */
+  /* The main container */
 }
 
 .app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  /* Assume sidebar state class is applied here for desktop */
+  /* e.g., .app.sidebar-collapsed */
+}
+
+/* Define sidebar widths and header height as CSS variables */
+:root {
+  --sidebar-width-expanded: 250px;
+  --sidebar-width-collapsed: 60px;
+  --header-height: 64px; /* Approx height based on padding */
 }
 
 .app-body {
-  display: flex;
-  flex: 1; /* Allows main content area to take up remaining space */
+  display: flex; /* Use flex to contain main content */
+  flex: 1; /* Takes remaining vertical space */
+  /* Margin handled by layout rules below */
 }
 
-/* Layout Components */
+/* --- Layout Components --- */
+
+/* Sidebar styles (adapted from Sidebar.jsx inline styles) */
+.sidebar {
+  width: var(--sidebar-width-expanded);
+  position: fixed;
+  top: 0;
+  bottom: 0; /* Make it cover full height */
+  left: 0;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease, transform 0.3s ease; /* Add transform for mobile */
+  z-index: 1000; /* High z-index to overlay content */
+  overflow-y: auto; /* Add scroll if content overflows */
+  flex-shrink: 0; /* Prevent shrinking in flex container (though fixed position takes it out of flow) */
+}
+
+.sidebar.collapsed {
+  width: var(--sidebar-width-collapsed);
+  overflow-x: hidden; /* Hide overflowing labels */
+}
+
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.sidebar-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap; /* Prevent wrapping */
+  overflow: hidden; /* Hide if width is 0 */
+}
+
+.sidebar.collapsed .sidebar-title {
+  opacity: 0;
+  width: 0; /* Collapse width */
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  color: #6b7280;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.sidebar-toggle:hover {
+  background-color: #f3f4f6;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0;
+  overflow-y: auto; /* Allow nav to scroll if needed */
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin-bottom: 0.25rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: #6b7280;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-radius: 0.375rem;
+  margin: 0 0.5rem;
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+.nav-link:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.nav-link.active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+  margin-right: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.sidebar.collapsed .nav-icon {
+  margin-right: 0; /* Remove margin when collapsed */
+  justify-content: center; /* Center icon */
+  width: 100%; /* Take full width of collapsed sidebar item padding */
+}
+
+.nav-label {
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+  overflow: hidden; /* Hide if width is 0 */
+}
+
+.sidebar.collapsed .nav-label {
+  opacity: 0;
+  width: 0; /* Collapse width */
+}
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s ease;
+  overflow: hidden; /* Hide if width is 0 */
+}
+
+.sidebar.collapsed .user-info {
+  opacity: 0;
+  width: 0; /* Collapse width */
+}
+
+.user-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  font-size: 1rem;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+.user-name {
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 0.875rem;
+}
+
+.user-status {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+
+/* Header styles (adapted from Header.jsx classes) */
 .header {
   background: #ffffff;
   border-bottom: 1px solid #e2e8f0;
@@ -43,55 +228,462 @@ body {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  position: sticky;
+  position: fixed; /* Make header fixed */
   top: 0;
-  z-index: 100;
+  right: 0;
+  left: var(--sidebar-width-expanded); /* Start after sidebar (desktop default) */
+  z-index: 500; /* Below sidebar, above content */
+  transition: left 0.3s ease, width 0.3s ease;
+  height: var(--header-height); /* Fixed height */
 }
 
-.header-logo {
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Space between menu toggle and logo */
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Space between notification and user menu */
+}
+
+
+.menu-toggle {
+  display: none; /* Hidden by default on desktop */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 1100; /* Above sidebar */
+}
+
+.hamburger {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background-color: #333; /* Adjust color */
+  margin: 4px 0;
+  transition: 0.4s;
+}
+
+/* Optional: Hamburger animation for menu open state */
+/*
+.menu-toggle.is-active .hamburger:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+.menu-toggle.is-active .hamburger:nth-child(2) { opacity: 0; }
+.menu-toggle.is-active .hamburger:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+*/
+
+
+.logo h1 {
   font-size: 1.5rem;
   font-weight: bold;
   color: #4f46e5;
+  margin: 0; /* Reset margin from h1 */
 }
 
 .header-nav {
+  /* Default desktop nav */
   display: flex;
-  gap: 2rem;
   align-items: center;
+  flex-grow: 1; /* Allow nav to take space */
+  justify-content: center; /* Center nav links */
 }
 
-.header-nav a {
+.nav-links {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 2rem; /* Space between nav items */
+}
+
+.nav-links li a {
   text-decoration: none;
   color: #64748b;
   font-weight: 500;
   transition: color 0.2s;
+  padding: 0.5rem 0; /* Add padding for click area */
 }
 
-.header-nav a:hover {
+.nav-links li a:hover {
   color: #4f46e5;
 }
 
-/* Sidebar styles are handled by inline styles in Sidebar.jsx */
+.notification-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #64748b;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
 
+.notification-btn:hover {
+    background-color: #f1f5f9;
+}
+
+.user-menu {
+    position: relative;
+}
+
+.user-avatar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.user-avatar img {
+    width: 32px; /* Adjust size */
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 32px; /* Adjust size */
+    height: 32px;
+    border-radius: 50%;
+    background-color: #a78bfa; /* Placeholder color */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 100%; /* Position below avatar */
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    min-width: 150px;
+    z-index: 1050; /* Above header but below modal */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    pointer-events: none; /* Allow clicks through when hidden */
+}
+
+.user-menu:hover .user-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.user-info {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #1a202c;
+    font-size: 0.9rem;
+}
+
+.user-status {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.dropdown-menu {
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0;
+}
+
+.dropdown-menu li button,
+.dropdown-menu li a {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #374151;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.dropdown-menu li button:hover,
+.dropdown-menu li a:hover {
+    background-color: #f3f4f6;
+}
+
+
+/* Main content area */
 .main-content {
-  flex: 1; /* Takes up remaining width */
+  flex: 1; /* Allow main content to grow within app-body */
   padding: 2rem;
-  /* Margin added by Sidebar.jsx or parent based on state */
-  /* Default margin for desktop expanded state */
-  margin-left: 250px;
-  min-height: calc(100vh - 80px); /* Adjust based on header/footer height */
+  min-height: calc(100vh - var(--header-height) - var(--footer-height, 0px)); /* Adjust based on header/footer (approx) */
+  /* Padding top handled by layout rules below to avoid fixed header overlap */
 }
 
+/* Footer styles - Footer.jsx uses Tailwind-like classes, so we'll keep minimal styles here */
 .footer {
-  background: #ffffff;
-  border-top: 1px solid #e2e8f0;
-  padding: 2rem;
-  text-align: center;
-  color: #64748b;
-  /* Margin added by Sidebar.jsx or parent based on state */
-  /* Default margin for desktop expanded state */
-  margin-left: 250px;
+    /* Margin handled by layout rules below */
+    /* Relying on Footer.jsx for background, padding, etc. */
 }
+
+
+/* --- Layout Margin/Padding based on Sidebar state --- */
+
+/* Desktop layout (min-width: 769px) */
+@media (min-width: 769px) {
+  /* Adjust header position based on sidebar width */
+  .header {
+    left: var(--sidebar-width-expanded);
+    width: calc(100% - var(--sidebar-width-expanded));
+  }
+
+  /* Adjust header position when sidebar is collapsed (requires .app.sidebar-collapsed class) */
+  .app.sidebar-collapsed .header {
+    left: var(--sidebar-width-collapsed);
+    width: calc(100% - var(--sidebar-width-collapsed));
+  }
+
+  /* Apply margin to the content area (app-body and footer) */
+  .app-body, /* The container for main content */
+  .footer {
+    margin-left: var(--sidebar-width-expanded);
+    transition: margin-left 0.3s ease;
+  }
+
+  /* Adjust margin when sidebar is collapsed (requires .app.sidebar-collapsed class) */
+  .app.sidebar-collapsed .app-body,
+  .app.sidebar-collapsed .footer {
+    margin-left: var(--sidebar-width-collapsed);
+  }
+
+  /* Add padding to main content to account for fixed header */
+  .main-content {
+     padding-top: calc(var(--header-height) + 2rem); /* Header height + existing padding */
+  }
+
+  /* Ensure desktop sidebar is visible and not an overlay */
+   .sidebar {
+     transform: translateX(0);
+   }
+   /* Ensure mobile 'open' class doesn't hide the sidebar on desktop */
+   .sidebar.open {
+     transform: translateX(0);
+   }
+
+  /* Hide mobile menu toggle on desktop */
+  .menu-toggle {
+    display: none;
+  }
+
+  /* Hide mobile overlay if implemented */
+   .sidebar-overlay {
+       display: none;
+   }
+}
+
+/* Mobile layout (max-width: 768px) */
+@media (max-width: 768px) {
+  /* Header is fixed at top, no margin */
+  .header {
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: var(--header-height);
+    margin-left: 0;
+    z-index: 600; /* Below sidebar overlay */
+  }
+
+  .header-left {
+      gap: 0.5rem; /* Smaller gap on mobile */
+  }
+
+  /* Mobile overlay nav (used by Header.jsx) */
+  .header-nav {
+    position: fixed;
+    top: var(--header-height); /* Position below header */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ffffff; /* Overlay background */
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    transform: translateX(-100%); /* Hide by default */
+    transition: transform 0.3s ease-in-out;
+    z-index: 550; /* Below sidebar, above main content */
+    overflow-y: auto; /* Allow nav to scroll */
+    display: none; /* Hide completely when not open */
+  }
+
+  .header-nav.nav-open {
+    transform: translateX(0); /* Show when open */
+    display: flex; /* Show flex when open */
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 1rem; /* Smaller gap */
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-links li a {
+      padding: 0.75rem; /* Larger click area */
+      border-bottom: 1px solid #e2e8f0;
+  }
+
+    .nav-links li:last-child a {
+        border-bottom: none;
+    }
+
+
+  .header-right {
+      gap: 0.5rem; /* Smaller gap */
+  }
+
+
+  /* app-body and footer have no margin on mobile */
+  .app-body,
+  .footer {
+    margin-left: 0;
+  }
+
+  /* Main content needs padding at the top to avoid being hidden by the fixed header */
+  .main-content {
+    padding: 1rem; /* Adjusted padding */
+    padding-top: calc(var(--header-height) + 1rem); /* Header height + existing padding */
+  }
+
+
+  /* Mobile menu toggle is visible */
+  .menu-toggle {
+    display: block;
+  }
+
+  /* Mobile sidebar overlay */
+  .sidebar {
+    transform: translateX(-100%); /* Hidden by default */
+    transition: transform 0.3s ease-in-out;
+    width: 250px; /* Fixed width for mobile overlay */
+    top: 0; /* Start from top */
+    bottom: 0; /* Extend to bottom */
+    height: 100vh; /* Ensure full height */
+  }
+
+  .sidebar.open {
+    transform: translateX(0); /* Show when open */
+  }
+
+  .sidebar.collapsed {
+      /* Collapsed state is not used for mobile overlay, ensure it's hidden unless 'open' */
+      width: 250px; /* Use full mobile width */
+      transform: translateX(-100%);
+  }
+  /* If the sidebar is collapsed *and* open (e.g., on a small desktop that fits collapsed), show it */
+   .sidebar.collapsed.open {
+     transform: translateX(0);
+   }
+
+    /* Overlay behind the mobile sidebar */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999; /* Below sidebar, above main content */
+        display: none; /* Hidden by default */
+    }
+
+    /* Needs JS to add this class or target based on sidebar.open */
+    /* Example: .app.sidebar-open-mobile .sidebar-overlay */
+
+
+  .dashboard {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .tracker-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .statistics {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(150px, 1fr)
+    );
+    gap: 1rem;
+  }
+
+  .calendar-grid {
+    font-size: 0.875rem;
+  }
+
+  .calendar-day {
+    padding: 0.5rem;
+    min-height: 40px;
+  }
+
+  .modal-content {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .habit-list {
+    gap: 1rem;
+  }
+
+  .habit-card {
+    padding: 1rem;
+  }
+
+  .habit-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .habit-title {
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .habit-actions {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+}
+
+/* --- Existing Component Styles (Copied) --- */
 
 /* Habit Components */
 .habit-list {
@@ -467,7 +1059,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 1000; /* Above all other content */
   padding: 1rem; /* Add padding for small screens */
   overflow-y: auto; /* Allow scrolling if content is tall */
 }
@@ -687,94 +1279,3 @@ body {
 .w-full {
   width: 100%;
 }
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .header {
-    padding: 1rem;
-  }
-
-  /* Sidebar is fixed and overlays on mobile, main content doesn't need margin */
-  .main-content,
-  .footer {
-    margin-left: 0;
-    padding: 1rem; /* Adjusted padding for smaller screens */
-  }
-
-  .dashboard {
-    grid-template-columns: 1fr;
-    gap: 1.5rem; /* Adjusted gap */
-  }
-
-  .tracker-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem; /* Adjusted gap */
-  }
-
-  .statistics {
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(150px, 1fr)
-    ); /* Adjusted min width */
-    gap: 1rem; /* Adjusted gap */
-  }
-
-  .calendar-grid {
-    font-size: 0.875rem;
-  }
-
-  .calendar-day {
-    padding: 0.5rem;
-    min-height: 40px; /* Smaller min height on mobile */
-  }
-
-  .modal-content {
-    margin: 1rem; /* Add margin to modal on smaller screens */
-    padding: 1.5rem; /* Adjusted padding */
-  }
-
-  .habit-list {
-    gap: 1rem; /* Adjusted gap */
-  }
-
-  .habit-card {
-    padding: 1rem;
-  }
-
-  .habit-card-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .habit-title {
-    margin-right: 0; /* Remove right margin when stacked */
-    width: 100%; /* Title takes full width */
-  }
-
-  .habit-actions {
-    width: 100%; /* Actions take full width */
-    justify-content: flex-end; /* Keep actions to the right if space allows */
-    flex-wrap: wrap; /* Allow buttons to wrap */
-  }
-
-  .button {
-    /* Optional: make buttons full width in some contexts if needed */
-    /* width: 100%; justify-content: center; */
-  }
-}
-
-/* Adjust main content margin based on sidebar state if parent class is available */
-/* Example (requires JS to add class to .app or #root):
-.app.sidebar-collapsed .main-content,
-.app.sidebar-collapsed .footer {
-    margin-left: 60px; // Assuming 60px collapsed width
-}
-
-@media (max-width: 768px) {
-    .app.sidebar-open .main-content,
-    .app.sidebar-open .footer {
-        margin-left: 0; // Sidebar overlays
-    }
-}
-*/
