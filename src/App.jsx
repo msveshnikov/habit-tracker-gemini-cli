@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Sidebar from "./components/layout/Sidebar";
 import Footer from "./components/layout/Footer";
@@ -9,7 +10,6 @@ import Calendar from "./components/tracking/Calendar";
 import "./App.css";
 
 function App() {
-    const [currentView, setCurrentView] = useState("dashboard");
     const [habits, setHabits] = useState([]);
     const [completions, setCompletions] = useState({});
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -19,11 +19,21 @@ function App() {
         const savedCompletions = localStorage.getItem("completions");
 
         if (savedHabits) {
-            setHabits(JSON.parse(savedHabits));
+            try {
+                setHabits(JSON.parse(savedHabits));
+            } catch (e) {
+                console.error("Failed to parse habits from localStorage", e);
+                setHabits([]);
+            }
         }
 
         if (savedCompletions) {
-            setCompletions(JSON.parse(savedCompletions));
+            try {
+                 setCompletions(JSON.parse(savedCompletions));
+            } catch (e) {
+                 console.error("Failed to parse completions from localStorage", e);
+                 setCompletions({});
+            }
         }
     }, []);
 
@@ -53,8 +63,11 @@ function App() {
         setCompletions((prev) => {
             const updated = { ...prev };
             Object.keys(updated).forEach((date) => {
-                if (updated[date][id]) {
+                if (updated[date] && updated[date][id] !== undefined) {
                     delete updated[date][id];
+                    if (Object.keys(updated[date]).length === 0) {
+                         delete updated[date];
+                    }
                 }
             });
             return updated;
@@ -62,64 +75,75 @@ function App() {
     };
 
     const toggleHabitCompletion = (habitId, date) => {
-        const dateKey = date || new Date().toISOString().split("T")[0];
-        setCompletions((prev) => ({
-            ...prev,
-            [dateKey]: {
-                ...prev[dateKey],
-                [habitId]: !prev[dateKey]?.[habitId],
-            },
-        }));
-    };
+        const dateKey = date ? new Date(date).toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
 
-    const renderCurrentView = () => {
-        switch (currentView) {
-            case "dashboard":
-                return <Dashboard habits={habits} completions={completions} />;
-            case "habits":
-                return (
-                    <HabitList
-                        habits={habits}
-                        onAddHabit={addHabit}
-                        onUpdateHabit={updateHabit}
-                        onDeleteHabit={deleteHabit}
-                        completions={completions}
-                    />
-                );
-            case "tracker":
-                return (
-                    <DailyTracker
-                        habits={habits}
-                        completions={completions}
-                        onToggleCompletion={toggleHabitCompletion}
-                    />
-                );
-            case "calendar":
-                return (
-                    <Calendar habits={habits} completions={completions} onToggleCompletion={toggleHabitCompletion} />
-                );
-            default:
-                return <Dashboard habits={habits} completions={completions} />;
-        }
+        setCompletions((prev) => {
+             const dateCompletions = prev[dateKey] || {};
+            return {
+                ...prev,
+                [dateKey]: {
+                    ...dateCompletions,
+                    [habitId]: !dateCompletions[habitId],
+                },
+            };
+        });
     };
 
     return (
-        <div className="app">
-            <Header onMenuToggle={() => setSidebarOpen(!sidebarOpen)} currentView={currentView} />
+        <BrowserRouter>
+            <div className="app">
+                <Header onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-            <div className="app-body">
-                <Sidebar
-                    isOpen={sidebarOpen}
-                    currentView={currentView}
-                    onViewChange={setCurrentView}
-                    onClose={() => setSidebarOpen(false)}
-                />
+                <div className="app-body">
+                    <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-                <main className="main-content">{renderCurrentView()}</main>
+                    <main className="main-content">
+                        <Routes>
+                            <Route path="/" element={<Dashboard habits={habits} completions={completions} />} />
+
+                            <Route
+                                path="/habits"
+                                element={
+                                    <HabitList
+                                        habits={habits}
+                                        onAddHabit={addHabit}
+                                        onUpdateHabit={updateHabit}
+                                        onDeleteHabit={deleteHabit}
+                                        completions={completions}
+                                    />
+                                }
+                            />
+
+                            <Route
+                                path="/tracker"
+                                element={
+                                    <DailyTracker
+                                        habits={habits}
+                                        completions={completions}
+                                        onToggleCompletion={toggleHabitCompletion}
+                                    />
+                                }
+                            />
+
+                            <Route
+                                path="/calendar"
+                                element={
+                                    <Calendar
+                                        habits={habits}
+                                        completions={completions}
+                                        onToggleCompletion={toggleHabitCompletion}
+                                    />
+                                }
+                            />
+
+                            <Route path="/analytics" element={<Dashboard habits={habits} completions={completions} />} />
+                        </Routes>
+                    </main>
+                </div>
+
+                <Footer />
             </div>
-
-            <Footer />
-        </div>
+        </BrowserRouter>
     );
 }
 

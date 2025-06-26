@@ -17,8 +17,20 @@ body {
 
 #root {
     min-height: 100vh;
+    /* Changed to grid or flex for main content + sidebar */
+    display: flex;
+    flex-direction: column; /* Allows header/footer to be full width */
+}
+
+.app {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-body {
+    display: flex;
+    flex: 1; /* Allows main content area to take up remaining space */
 }
 
 /* Layout Components */
@@ -58,47 +70,15 @@ body {
     color: #4f46e5;
 }
 
-.sidebar {
-    width: 250px;
-    background: #ffffff;
-    border-right: 1px solid #e2e8f0;
-    padding: 2rem 0;
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-    z-index: 90;
-}
-
-.sidebar-menu {
-    list-style: none;
-}
-
-.sidebar-menu li {
-    margin-bottom: 0.5rem;
-}
-
-.sidebar-menu a {
-    display: block;
-    padding: 0.75rem 2rem;
-    text-decoration: none;
-    color: #64748b;
-    transition: all 0.2s;
-}
-
-.sidebar-menu a:hover,
-.sidebar-menu a.active {
-    background: #f1f5f9;
-    color: #4f46e5;
-    border-right: 3px solid #4f46e5;
-}
+/* Sidebar styles are handled by inline styles in Sidebar.jsx */
 
 .main-content {
-    margin-left: 250px;
-    flex: 1;
+    flex: 1; /* Takes up remaining width */
     padding: 2rem;
-    min-height: calc(100vh - 80px);
+    /* Margin added by Sidebar.jsx or parent based on state */
+    /* Default margin for desktop expanded state */
+    margin-left: 250px;
+    min-height: calc(100vh - 80px); /* Adjust based on header/footer height */
 }
 
 .footer {
@@ -107,23 +87,31 @@ body {
     padding: 2rem;
     text-align: center;
     color: #64748b;
+    /* Margin added by Sidebar.jsx or parent based on state */
+    /* Default margin for desktop expanded state */
     margin-left: 250px;
 }
 
 /* Habit Components */
+.habit-list {
+    display: grid;
+    gap: 1.5rem; /* Increased gap for better spacing */
+}
+
 .habit-card {
     background: #ffffff;
     border-radius: 8px;
     padding: 1.5rem;
-    margin-bottom: 1rem;
     border: 1px solid #e2e8f0;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    transition: all 0.2s;
+    transition: all 0.2s ease-in-out; /* Smooth transition */
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column;
 }
 
 .habit-card:hover {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transform: translateY(-1px);
+    transform: translateY(-2px); /* Slightly lift on hover */
 }
 
 .habit-card-header {
@@ -131,43 +119,46 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 .habit-title {
     font-size: 1.25rem;
     font-weight: 600;
     color: #1a202c;
+    flex-grow: 1; /* Allow title to take space */
+    margin-right: 1rem; /* Space between title and actions */
 }
 
 .habit-description {
     color: #64748b;
     margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
 .habit-actions {
     display: flex;
     gap: 0.5rem;
-    justify-content: flex-end;
+    /* justify-content: flex-end; */ /* Removed as header uses wrap */
+    align-items: center; /* Align buttons vertically */
 }
 
 .habit-form {
-    background: #ffffff;
+    /* Styles for the form itself, assuming it's inside a modal */
+    background: #ffffff; /* Modal content background */
     border-radius: 8px;
     padding: 2rem;
-    border: 1px solid #e2e8f0;
+    /* border: 1px solid #e2e8f0; */ /* Border might be on modal content */
     max-width: 500px;
-    margin: 0 auto;
-}
-
-.habit-list {
-    display: grid;
-    gap: 1rem;
+    margin: 0 auto; /* Centered within modal */
 }
 
 .habit-progress {
     display: flex;
     align-items: center;
     gap: 1rem;
+    margin-top: 1rem; /* Added margin top */
 }
 
 .progress-bar {
@@ -188,6 +179,8 @@ body {
     font-size: 0.875rem;
     color: #64748b;
     font-weight: 500;
+    min-width: 50px; /* Prevent text from shrinking too much */
+    text-align: right;
 }
 
 /* Tracking Components */
@@ -200,8 +193,8 @@ body {
 
 .tracker-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted min width */
+    gap: 1.5rem; /* Increased gap */
 }
 
 .calendar {
@@ -218,34 +211,94 @@ body {
     margin-bottom: 1rem;
 }
 
+.calendar-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1a202c;
+}
+
+.calendar-nav-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: #e2e8f0; /* Border color between days */
+    margin-bottom: 1px;
+}
+
+.calendar-weekday {
+    background: #f1f5f9;
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #475569;
+}
+
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 1px;
-    background: #e2e8f0;
+    background: #e2e8f0; /* Border color between days */
 }
 
 .calendar-day {
     background: #ffffff;
-    padding: 0.75rem;
+    padding: 0.75rem 0.5rem; /* Adjusted padding */
     text-align: center;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.1s;
+    min-height: 50px; /* Ensure minimum size */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.875rem;
 }
 
 .calendar-day:hover {
     background: #f1f5f9;
+    transform: scale(1.05); /* Slight scale effect */
+    z-index: 1; /* Bring hovered day to front */
+}
+
+.calendar-day.outside-month {
+    color: #cbd5e1; /* Grey out days outside the current month */
+    cursor: default;
+    background: #f8fafc;
+}
+
+.calendar-day.outside-month:hover {
+    background: #f8fafc;
+    transform: none;
 }
 
 .calendar-day.completed {
-    background: #dcfce7;
-    color: #166534;
+    background: #dcfce7; /* Light green */
+    color: #166534; /* Dark green text */
+    font-weight: 600;
+}
+
+.calendar-day.partial {
+    background: #fef9c3; /* Light yellow */
+    color: #a16207; /* Dark yellow text */
+    font-weight: 600;
+}
+
+.calendar-day.incomplete {
+    background: #fee2e2; /* Light red */
+    color: #991b1b; /* Dark red text */
+    font-weight: 600;
 }
 
 .calendar-day.today {
-    background: #dbeafe;
-    color: #1e40af;
-    font-weight: 600;
+    outline: 2px solid #3b82f6; /* Blue outline for today */
+    outline-offset: -2px;
+    background-color: #eff6ff; /* Very light blue background */
 }
 
 .streak-counter {
@@ -257,6 +310,7 @@ body {
     color: white;
     border-radius: 8px;
     text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .streak-number {
@@ -295,24 +349,28 @@ body {
 .chart-container {
     height: 300px;
     width: 100%;
+    /* Add some padding or margin if needed */
 }
 
 .statistics {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjusted min width */
+    gap: 1.5rem; /* Increased gap */
 }
 
 .stat-item {
     text-align: center;
     padding: 1rem;
+    background: #f9fafb; /* Light background for stat items */
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
 }
 
 .stat-value {
     font-size: 2rem;
     font-weight: bold;
     color: #4f46e5;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem; /* Reduced margin */
 }
 
 .stat-label {
@@ -331,9 +389,15 @@ body {
     text-decoration: none;
     border: none;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease-in-out; /* Added ease-in-out */
     font-size: 0.875rem;
     gap: 0.5rem;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .button-primary {
@@ -341,7 +405,7 @@ body {
     color: white;
 }
 
-.button-primary:hover {
+.button-primary:hover:not(:disabled) {
     background: #4338ca;
 }
 
@@ -351,8 +415,9 @@ body {
     border: 1px solid #e2e8f0;
 }
 
-.button-secondary:hover {
+.button-secondary:hover:not(:disabled) {
     background: #e2e8f0;
+    border-color: #cbd5e1;
 }
 
 .button-success {
@@ -360,7 +425,7 @@ body {
     color: white;
 }
 
-.button-success:hover {
+.button-success:hover:not(:disabled) {
     background: #059669;
 }
 
@@ -369,7 +434,7 @@ body {
     color: white;
 }
 
-.button-danger:hover {
+.button-danger:hover:not(:disabled) {
     background: #dc2626;
 }
 
@@ -389,11 +454,13 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    padding: 1rem; /* Add padding for small screens */
+    overflow-y: auto; /* Allow scrolling if content is tall */
 }
 
 .modal-content {
@@ -401,10 +468,11 @@ body {
     border-radius: 8px;
     padding: 2rem;
     max-width: 500px;
-    width: 90%;
-    max-height: 90vh;
+    width: 100%; /* Use 100% width within max-width */
+    max-height: 95vh; /* Allow a bit more height */
     overflow-y: auto;
     position: relative;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Added shadow */
 }
 
 .modal-header {
@@ -429,6 +497,11 @@ body {
     cursor: pointer;
     color: #64748b;
     padding: 0;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #1a202c;
 }
 
 .input {
@@ -437,7 +510,8 @@ body {
     border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 0.875rem;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    color: #374151;
 }
 
 .input:focus {
@@ -466,10 +540,11 @@ body {
 .select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 0.5rem center;
+    background-position: right 0.75rem center; /* Adjusted position */
     background-repeat: no-repeat;
-    background-size: 1.5em 1.5em;
+    background-size: 1em 1em; /* Adjusted size */
     padding-right: 2.5rem;
+    cursor: pointer;
 }
 
 .loading {
@@ -477,6 +552,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    min-height: 150px; /* Ensure visibility even if content is small */
 }
 
 .spinner {
@@ -542,12 +618,29 @@ body {
     margin-top: 1rem;
 }
 
+.mr-1 {
+    margin-right: 0.25rem;
+}
+.mr-2 {
+    margin-right: 0.5rem;
+}
+.mr-3 {
+    margin-right: 0.75rem;
+}
+.mr-4 {
+    margin-right: 1rem;
+}
+
 .flex {
     display: flex;
 }
 
 .flex-col {
     flex-direction: column;
+}
+
+.items-start {
+    align-items: flex-start;
 }
 
 .items-center {
@@ -578,36 +671,36 @@ body {
     gap: 1rem;
 }
 
+.w-full {
+    width: 100%;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s;
-    }
-
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
-    .main-content,
-    .footer {
-        margin-left: 0;
-    }
-
     .header {
         padding: 1rem;
     }
 
+    /* Sidebar is fixed and overlays on mobile, main content doesn't need margin */
+    .main-content,
+    .footer {
+        margin-left: 0;
+        padding: 1rem; /* Adjusted padding for smaller screens */
+    }
+
     .dashboard {
         grid-template-columns: 1fr;
+        gap: 1.5rem; /* Adjusted gap */
     }
 
     .tracker-grid {
         grid-template-columns: 1fr;
+        gap: 1rem; /* Adjusted gap */
     }
 
     .statistics {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjusted min width */
+        gap: 1rem; /* Adjusted gap */
     }
 
     .calendar-grid {
@@ -616,17 +709,16 @@ body {
 
     .calendar-day {
         padding: 0.5rem;
+        min-height: 40px; /* Smaller min height on mobile */
     }
 
     .modal-content {
-        margin: 1rem;
-        padding: 1.5rem;
+        margin: 1rem; /* Add margin to modal on smaller screens */
+        padding: 1.5rem; /* Adjusted padding */
     }
-}
 
-@media (max-width: 480px) {
-    .main-content {
-        padding: 1rem;
+    .habit-list {
+        gap: 1rem; /* Adjusted gap */
     }
 
     .habit-card {
@@ -639,16 +731,34 @@ body {
         gap: 1rem;
     }
 
-    .statistics {
-        grid-template-columns: 1fr;
+    .habit-title {
+        margin-right: 0; /* Remove right margin when stacked */
+        width: 100%; /* Title takes full width */
     }
 
-    .streak-number {
-        font-size: 2rem;
+    .habit-actions {
+        width: 100%; /* Actions take full width */
+        justify-content: flex-end; /* Keep actions to the right if space allows */
+        flex-wrap: wrap; /* Allow buttons to wrap */
     }
 
     .button {
-        width: 100%;
-        justify-content: center;
+        /* Optional: make buttons full width in some contexts if needed */
+        /* width: 100%; justify-content: center; */
     }
 }
+
+/* Adjust main content margin based on sidebar state if parent class is available */
+/* Example (requires JS to add class to .app or #root):
+.app.sidebar-collapsed .main-content,
+.app.sidebar-collapsed .footer {
+    margin-left: 60px; // Assuming 60px collapsed width
+}
+
+@media (max-width: 768px) {
+    .app.sidebar-open .main-content,
+    .app.sidebar-open .footer {
+        margin-left: 0; // Sidebar overlays
+    }
+}
+*/

@@ -41,3 +41,53 @@ This section outlines potential design choices and technical considerations for 
 *   Goal setting and progress tracking features.
 *   Exporting data.
 *   Theming (light/dark mode).
+
+# TODO
+
+- fix react-router-dom.js?v=ff463e68:529 Uncaught Error: useLocation() may be used only in the context of a <Router> component.
+    at invariant (react-router-dom.js?v=ff463e68:529:11)
+    at useLocation (react-router-dom.js?v=ff463e68:5172:3)
+    at Sidebar (Sidebar.jsx:6:20)
+    at react-stack-bottom-frame (react-dom_client.js?v=ff463e68:17422:20)
+    at renderWithHooks (react-dom_client.js?v=ff463e68:4204:24)
+    at updateFunctionComponent (react-dom_client.js?v=ff463e68:6617:21)
+    at beginWork (react-dom_client.js?v=ff463e68:7652:20)
+    at runWithFiberInDEV (react-dom_client.js?v=ff463e68:1483:72)
+    at performUnitOfWork (react-dom_client.js?v=ff463e68:10866:98)
+    at workLoopSync (react-dom_client.js?v=ff463e68:10726:43)
+invariant @ react-router-dom.js?v=ff463e68:529
+useLocation @ react-router-dom.js?v=ff463e68:5172
+Sidebar @ Sidebar.jsx:6
+react-stack-bottom-frame @ react-dom_client.js?v=ff463e68:17422
+renderWithHooks @ react-dom_client.js?v=ff463e68:4204
+updateFunctionComponent @ react-dom_client.js?v=ff463e68:6617
+beginWork @ react-dom_client.js?v=ff463e68:7652
+runWithFiberInDEV @ react-dom_client.js?v=ff463e68:1483
+performUnitOfWork @ react-dom_client.js?v=ff463e68:10866
+workLoopSync @ react-dom_client.js?v=ff463e68:10726
+renderRootSync @ react-dom_client.js?v=ff463e68:10709
+performWorkOnRoot @ react-dom_client.js?v=ff463e68:10357
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=ff463e68:11621
+performWorkUntilDeadline @ react-dom_client.js?v=ff463e68:34
+<Sidebar>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=ff463e68:248
+App @ App.jsx:111
+react-stack-bottom-frame @ react-dom_client.js?v=ff463e68:17422
+renderWithHooksAgain @ react-dom_client.js?v=ff463e68:4279
+renderWithHooks @ react-dom_client.js?v=ff463e68:4215
+updateFunctionComponent @ react-dom_client.js?v=ff463e68:6617
+beginWork @ react-dom_client.js?v=ff463e68:7652
+runWithFiberInDEV @ react-dom_client.js?v=ff463e68:1483
+performUnitOfWork @ react-dom_client.js?v=ff463e68:10866
+workLoopSync @ react-dom_client.js?v=ff463e68:10726
+renderRootSync @ react-dom_client.js?v=ff463e68:10709
+performWorkOnRoot @ react-dom_client.js?v=ff463e68:10357
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=ff463e68:11621
+performWorkUntilDeadline @ react-dom_client.js?v=ff463e68:34
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=ff463e68:248
+(anonymous) @ main.jsx:8Understand this error
+App.jsx:111 An error occurred in the <Sidebar> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
