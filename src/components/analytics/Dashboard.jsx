@@ -24,6 +24,7 @@ const Dashboard = () => {
         if (habits.length > 0) {
             calculateAnalytics();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [habits, timeRange]);
 
     const loadHabitsData = () => {
