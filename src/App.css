@@ -54,7 +54,9 @@ body {
   border-right: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease, transform 0.3s ease; /* Add transform for mobile */
+  transition:
+    width 0.3s ease,
+    transform 0.3s ease; /* Add transform for mobile */
   z-index: 1000; /* High z-index to overlay content */
   overflow-y: auto; /* Add scroll if content overflows */
   flex-shrink: 0; /* Prevent shrinking in flex container (though fixed position takes it out of flow) */
@@ -218,7 +220,6 @@ body {
   color: #6b7280;
 }
 
-
 /* Header styles (adapted from Header.jsx classes) */
 .header {
   background: #ffffff;
@@ -231,9 +232,13 @@ body {
   position: fixed; /* Make header fixed */
   top: 0;
   right: 0;
-  left: var(--sidebar-width-expanded); /* Start after sidebar (desktop default) */
+  left: var(
+    --sidebar-width-expanded
+  ); /* Start after sidebar (desktop default) */
   z-index: 500; /* Below sidebar, above content */
-  transition: left 0.3s ease, width 0.3s ease;
+  transition:
+    left 0.3s ease,
+    width 0.3s ease;
   height: var(--header-height); /* Fixed height */
 }
 
@@ -251,11 +256,10 @@ body {
 }
 
 .header-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem; /* Space between notification and user menu */
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Space between notification and user menu */
 }
-
 
 .menu-toggle {
   display: none; /* Hidden by default on desktop */
@@ -281,7 +285,6 @@ body {
 .menu-toggle.is-active .hamburger:nth-child(2) { opacity: 0; }
 .menu-toggle.is-active .hamburger:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
 */
-
 
 .logo h1 {
   font-size: 1.5rem;
@@ -319,135 +322,140 @@ body {
 }
 
 .notification-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #64748b;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: background-color 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
 }
 
 .notification-btn:hover {
-    background-color: #f1f5f9;
+  background-color: #f1f5f9;
 }
 
 .user-menu {
-    position: relative;
+  position: relative;
 }
 
 .user-avatar {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
 }
 
 .user-avatar img {
-    width: 32px; /* Adjust size */
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
+  width: 32px; /* Adjust size */
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .avatar-placeholder {
-    width: 32px; /* Adjust size */
-    height: 32px;
-    border-radius: 50%;
-    background-color: #a78bfa; /* Placeholder color */
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1rem;
+  width: 32px; /* Adjust size */
+  height: 32px;
+  border-radius: 50%;
+  background-color: #a78bfa; /* Placeholder color */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
 }
 
 .user-dropdown {
-    position: absolute;
-    top: 100%; /* Position below avatar */
-    right: 0;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    min-width: 150px;
-    z-index: 1050; /* Above header but below modal */
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
-    pointer-events: none; /* Allow clicks through when hidden */
+  position: absolute;
+  top: 100%; /* Position below avatar */
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  min-width: 150px;
+  z-index: 1050; /* Above header but below modal */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s ease;
+  pointer-events: none; /* Allow clicks through when hidden */
 }
 
 .user-menu:hover .user-dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .user-info {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #e2e8f0;
-    display: flex;
-    flex-direction: column;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
 }
 
 .user-name {
-    font-weight: 600;
-    color: #1a202c;
-    font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a202c;
+  font-size: 0.9rem;
 }
 
 .user-status {
-    font-size: 0.8rem;
-    color: #64748b;
+  font-size: 0.8rem;
+  color: #64748b;
 }
 
 .dropdown-menu {
-    list-style: none;
-    padding: 0.5rem 0;
-    margin: 0;
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
 }
 
 .dropdown-menu li button,
 .dropdown-menu li a {
-    display: block;
-    width: 100%;
-    padding: 0.75rem 1rem;
-    text-align: left;
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: #374151;
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-    font-size: 0.9rem;
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #374151;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  font-size: 0.9rem;
 }
 
 .dropdown-menu li button:hover,
 .dropdown-menu li a:hover {
-    background-color: #f3f4f6;
+  background-color: #f3f4f6;
 }
-
 
 /* Main content area */
 .main-content {
   flex: 1; /* Allow main content to grow within app-body */
   padding: 2rem;
-  min-height: calc(100vh - var(--header-height) - var(--footer-height, 0px)); /* Adjust based on header/footer (approx) */
+  min-height: calc(
+    100vh - var(--header-height) - var(--footer-height, 0px)
+  ); /* Adjust based on header/footer (approx) */
   /* Padding top handled by layout rules below to avoid fixed header overlap */
 }
 
 /* Footer styles - Footer.jsx uses Tailwind-like classes, so we'll keep minimal styles here */
 .footer {
-    /* Margin handled by layout rules below */
-    /* Relying on Footer.jsx for background, padding, etc. */
+  /* Margin handled by layout rules below */
+  /* Relying on Footer.jsx for background, padding, etc. */
 }
-
 
 /* --- Layout Margin/Padding based on Sidebar state --- */
 
@@ -480,17 +488,19 @@ body {
 
   /* Add padding to main content to account for fixed header */
   .main-content {
-     padding-top: calc(var(--header-height) + 2rem); /* Header height + existing padding */
+    padding-top: calc(
+      var(--header-height) + 2rem
+    ); /* Header height + existing padding */
   }
 
   /* Ensure desktop sidebar is visible and not an overlay */
-   .sidebar {
-     transform: translateX(0);
-   }
-   /* Ensure mobile 'open' class doesn't hide the sidebar on desktop */
-   .sidebar.open {
-     transform: translateX(0);
-   }
+  .sidebar {
+    transform: translateX(0);
+  }
+  /* Ensure mobile 'open' class doesn't hide the sidebar on desktop */
+  .sidebar.open {
+    transform: translateX(0);
+  }
 
   /* Hide mobile menu toggle on desktop */
   .menu-toggle {
@@ -498,9 +508,9 @@ body {
   }
 
   /* Hide mobile overlay if implemented */
-   .sidebar-overlay {
-       display: none;
-   }
+  .sidebar-overlay {
+    display: none;
+  }
 }
 
 /* Mobile layout (max-width: 768px) */
@@ -519,7 +529,7 @@ body {
   }
 
   .header-left {
-      gap: 0.5rem; /* Smaller gap on mobile */
+    gap: 0.5rem; /* Smaller gap on mobile */
   }
 
   /* Mobile overlay nav (used by Header.jsx) */
@@ -553,19 +563,17 @@ body {
   }
 
   .nav-links li a {
-      padding: 0.75rem; /* Larger click area */
-      border-bottom: 1px solid #e2e8f0;
+    padding: 0.75rem; /* Larger click area */
+    border-bottom: 1px solid #e2e8f0;
   }
 
-    .nav-links li:last-child a {
-        border-bottom: none;
-    }
-
+  .nav-links li:last-child a {
+    border-bottom: none;
+  }
 
   .header-right {
-      gap: 0.5rem; /* Smaller gap */
+    gap: 0.5rem; /* Smaller gap */
   }
-
 
   /* app-body and footer have no margin on mobile */
   .app-body,
@@ -576,9 +584,10 @@ body {
   /* Main content needs padding at the top to avoid being hidden by the fixed header */
   .main-content {
     padding: 1rem; /* Adjusted padding */
-    padding-top: calc(var(--header-height) + 1rem); /* Header height + existing padding */
+    padding-top: calc(
+      var(--header-height) + 1rem
+    ); /* Header height + existing padding */
   }
-
 
   /* Mobile menu toggle is visible */
   .menu-toggle {
@@ -600,30 +609,29 @@ body {
   }
 
   .sidebar.collapsed {
-      /* Collapsed state is not used for mobile overlay, ensure it's hidden unless 'open' */
-      width: 250px; /* Use full mobile width */
-      transform: translateX(-100%);
+    /* Collapsed state is not used for mobile overlay, ensure it's hidden unless 'open' */
+    width: 250px; /* Use full mobile width */
+    transform: translateX(-100%);
   }
   /* If the sidebar is collapsed *and* open (e.g., on a small desktop that fits collapsed), show it */
-   .sidebar.collapsed.open {
-     transform: translateX(0);
-   }
+  .sidebar.collapsed.open {
+    transform: translateX(0);
+  }
 
-    /* Overlay behind the mobile sidebar */
-    .sidebar-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999; /* Below sidebar, above main content */
-        display: none; /* Hidden by default */
-    }
+  /* Overlay behind the mobile sidebar */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* Below sidebar, above main content */
+    display: none; /* Hidden by default */
+  }
 
-    /* Needs JS to add this class or target based on sidebar.open */
-    /* Example: .app.sidebar-open-mobile .sidebar-overlay */
-
+  /* Needs JS to add this class or target based on sidebar.open */
+  /* Example: .app.sidebar-open-mobile .sidebar-overlay */
 
   .dashboard {
     grid-template-columns: 1fr;
@@ -636,10 +644,7 @@ body {
   }
 
   .statistics {
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(150px, 1fr)
-    );
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 1rem;
   }
 

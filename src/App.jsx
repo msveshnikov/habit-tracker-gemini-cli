@@ -17,13 +17,12 @@ const RouteWrapper = ({ children, onCloseSidebar }) => {
     // Close sidebar on mobile when route changes
     // Using a simple width check, could use a context/hook for better responsiveness
     if (window.innerWidth <= 768) {
-        onCloseSidebar();
+      onCloseSidebar();
     }
   }, [location, onCloseSidebar]);
 
   return <>{children}</>;
 };
-
 
 function App() {
   const [habits, setHabits] = useState([]);
@@ -121,17 +120,21 @@ function App() {
 
       // Check if *any* habit for this date is now marked as true
       // This helps clean up localStorage by removing date entries with no true completions
-      const hasAnyTrueCompletion = Object.values(newDateCompletions).some(status => status === true);
+      const hasAnyTrueCompletion = Object.values(newDateCompletions).some(
+        (status) => status === true,
+      );
 
       if (!hasAnyTrueCompletion && Object.keys(newDateCompletions).length > 0) {
-         // If no true completions left and there were entries, remove the date key
-         const { [dateKey]: _, ...rest } = prev;
-         return rest;
-      } else if (!hasAnyTrueCompletion && Object.keys(newDateCompletions).length === 0) {
-         // If no true completions and no entries, return prev state (no change needed)
-         return prev;
-      }
-      else {
+        // If no true completions left and there were entries, remove the date key
+        const { [dateKey]: _, ...rest } = prev;
+        return rest;
+      } else if (
+        !hasAnyTrueCompletion &&
+        Object.keys(newDateCompletions).length === 0
+      ) {
+        // If no true completions and no entries, return prev state (no change needed)
+        return prev;
+      } else {
         // Otherwise, update the date entry with the new status
         return {
           ...prev,
@@ -141,13 +144,14 @@ function App() {
     });
   };
 
-
   return (
     <BrowserRouter>
       {/* Add class 'sidebar-open' to app container when mobile sidebar is open */}
-      <div className={`app ${isSidebarMobileOpen ? 'sidebar-open' : ''}`}>
+      <div className={`app ${isSidebarMobileOpen ? "sidebar-open" : ""}`}>
         {/* Header component - needs to accept onMenuToggle prop */}
-        <Header onMenuToggle={() => setIsSidebarMobileOpen(!isSidebarMobileOpen)} />
+        <Header
+          onMenuToggle={() => setIsSidebarMobileOpen(!isSidebarMobileOpen)}
+        />
 
         <div className="app-body">
           {/* Sidebar component - needs to accept isOpen and onClose props */}
@@ -172,7 +176,9 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <RouteWrapper onCloseSidebar={() => setIsSidebarMobileOpen(false)}>
+                  <RouteWrapper
+                    onCloseSidebar={() => setIsSidebarMobileOpen(false)}
+                  >
                     <Dashboard habits={habits} completions={completions} />
                   </RouteWrapper>
                 }
@@ -181,7 +187,9 @@ function App() {
               <Route
                 path="/habits"
                 element={
-                   <RouteWrapper onCloseSidebar={() => setIsSidebarMobileOpen(false)}>
+                  <RouteWrapper
+                    onCloseSidebar={() => setIsSidebarMobileOpen(false)}
+                  >
                     <HabitList
                       habits={habits}
                       onAddHabit={addHabit}
@@ -189,43 +197,49 @@ function App() {
                       onDeleteHabit={deleteHabit}
                       completions={completions}
                     />
-                   </RouteWrapper>
+                  </RouteWrapper>
                 }
               />
 
               <Route
                 path="/tracker"
                 element={
-                   <RouteWrapper onCloseSidebar={() => setIsSidebarMobileOpen(false)}>
+                  <RouteWrapper
+                    onCloseSidebar={() => setIsSidebarMobileOpen(false)}
+                  >
                     <DailyTracker
                       habits={habits}
                       completions={completions}
                       onToggleCompletion={toggleHabitCompletion}
                     />
-                   </RouteWrapper>
+                  </RouteWrapper>
                 }
               />
 
               <Route
                 path="/calendar"
                 element={
-                   <RouteWrapper onCloseSidebar={() => setIsSidebarMobileOpen(false)}>
+                  <RouteWrapper
+                    onCloseSidebar={() => setIsSidebarMobileOpen(false)}
+                  >
                     <Calendar
                       habits={habits}
                       completions={completions}
                       onToggleCompletion={toggleHabitCompletion}
                     />
-                   </RouteWrapper>
+                  </RouteWrapper>
                 }
               />
 
               {/* Analytics route, currently rendering the same Dashboard component */}
-               <Route
+              <Route
                 path="/analytics"
                 element={
-                   <RouteWrapper onCloseSidebar={() => setIsSidebarMobileOpen(false)}>
+                  <RouteWrapper
+                    onCloseSidebar={() => setIsSidebarMobileOpen(false)}
+                  >
                     <Dashboard habits={habits} completions={completions} />
-                   </RouteWrapper>
+                  </RouteWrapper>
                 }
               />
             </Routes>
