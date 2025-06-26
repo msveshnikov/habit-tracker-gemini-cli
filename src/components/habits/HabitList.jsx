@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import HabitCard from './HabitCard';
-import HabitForm from './HabitForm';
-import Button from '../ui/Button';
-import Modal from '../ui/Modal';
-import Loading from '../ui/Loading';
+import React, { useState, useEffect } from "react";
+import HabitCard from "./HabitCard";
+import HabitForm from "./HabitForm";
+import Button from "../ui/Button";
+import Modal from "../ui/Modal";
+import Loading from "../ui/Loading";
 
 const HabitList = () => {
   const [habits, setHabits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingHabit, setEditingHabit] = useState(null);
-  const [filter, setFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('name');
+  const [filter, setFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("name");
 
   useEffect(() => {
     loadHabits();
@@ -20,12 +20,12 @@ const HabitList = () => {
   const loadHabits = async () => {
     try {
       setLoading(true);
-      const savedHabits = localStorage.getItem('habits');
+      const savedHabits = localStorage.getItem("habits");
       if (savedHabits) {
         setHabits(JSON.parse(savedHabits));
       }
     } catch (error) {
-      console.error('Failed to load habits:', error);
+      console.error("Failed to load habits:", error);
     } finally {
       setLoading(false);
     }
@@ -33,10 +33,10 @@ const HabitList = () => {
 
   const saveHabits = (updatedHabits) => {
     try {
-      localStorage.setItem('habits', JSON.stringify(updatedHabits));
+      localStorage.setItem("habits", JSON.stringify(updatedHabits));
       setHabits(updatedHabits);
     } catch (error) {
-      console.error('Failed to save habits:', error);
+      console.error("Failed to save habits:", error);
     }
   };
 
@@ -46,7 +46,7 @@ const HabitList = () => {
       ...habitData,
       createdAt: new Date().toISOString(),
       streak: 0,
-      completions: []
+      completions: [],
     };
     const updatedHabits = [...habits, newHabit];
     saveHabits(updatedHabits);
@@ -54,10 +54,10 @@ const HabitList = () => {
   };
 
   const handleEditHabit = (habitData) => {
-    const updatedHabits = habits.map(habit =>
+    const updatedHabits = habits.map((habit) =>
       habit.id === editingHabit.id
         ? { ...habit, ...habitData, updatedAt: new Date().toISOString() }
-        : habit
+        : habit,
     );
     saveHabits(updatedHabits);
     setEditingHabit(null);
@@ -65,27 +65,27 @@ const HabitList = () => {
   };
 
   const handleDeleteHabit = (habitId) => {
-    const updatedHabits = habits.filter(habit => habit.id !== habitId);
+    const updatedHabits = habits.filter((habit) => habit.id !== habitId);
     saveHabits(updatedHabits);
   };
 
   const handleCompleteHabit = (habitId) => {
-    const today = new Date().toISOString().split('T')[0];
-    const updatedHabits = habits.map(habit => {
+    const today = new Date().toISOString().split("T")[0];
+    const updatedHabits = habits.map((habit) => {
       if (habit.id === habitId) {
         const completions = habit.completions || [];
         const isAlreadyCompleted = completions.includes(today);
-        
+
         if (isAlreadyCompleted) {
           return {
             ...habit,
-            completions: completions.filter(date => date !== today)
+            completions: completions.filter((date) => date !== today),
           };
         } else {
           return {
             ...habit,
             completions: [...completions, today],
-            streak: calculateStreak([...completions, today])
+            streak: calculateStreak([...completions, today]),
           };
         }
       }
@@ -96,23 +96,25 @@ const HabitList = () => {
 
   const calculateStreak = (completions) => {
     if (!completions.length) return 0;
-    
+
     const sortedDates = completions.sort((a, b) => new Date(b) - new Date(a));
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
     let streak = 0;
     let currentDate = new Date();
-    
+
     for (let i = 0; i < sortedDates.length; i++) {
       const completionDate = new Date(sortedDates[i]);
-      const diffDays = Math.floor((currentDate - completionDate) / (1000 * 60 * 60 * 24));
-      
+      const diffDays = Math.floor(
+        (currentDate - completionDate) / (1000 * 60 * 60 * 24),
+      );
+
       if (diffDays === streak) {
         streak++;
       } else {
         break;
       }
     }
-    
+
     return streak;
   };
 
@@ -128,28 +130,28 @@ const HabitList = () => {
 
   const getFilteredHabits = () => {
     let filtered = habits;
-    
-    if (filter === 'active') {
-      filtered = habits.filter(habit => !habit.archived);
-    } else if (filter === 'completed') {
-      const today = new Date().toISOString().split('T')[0];
-      filtered = habits.filter(habit => 
-        habit.completions && habit.completions.includes(today)
+
+    if (filter === "active") {
+      filtered = habits.filter((habit) => !habit.archived);
+    } else if (filter === "completed") {
+      const today = new Date().toISOString().split("T")[0];
+      filtered = habits.filter(
+        (habit) => habit.completions && habit.completions.includes(today),
       );
-    } else if (filter === 'pending') {
-      const today = new Date().toISOString().split('T')[0];
-      filtered = habits.filter(habit => 
-        !habit.completions || !habit.completions.includes(today)
+    } else if (filter === "pending") {
+      const today = new Date().toISOString().split("T")[0];
+      filtered = habits.filter(
+        (habit) => !habit.completions || !habit.completions.includes(today),
       );
     }
 
     return filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'name':
+        case "name":
           return a.name.localeCompare(b.name);
-        case 'streak':
+        case "streak":
           return (b.streak || 0) - (a.streak || 0);
-        case 'created':
+        case "created":
           return new Date(b.createdAt) - new Date(a.createdAt);
         default:
           return 0;
@@ -174,8 +176,8 @@ const HabitList = () => {
 
       <div className="habit-controls">
         <div className="filters">
-          <select 
-            value={filter} 
+          <select
+            value={filter}
             onChange={(e) => setFilter(e.target.value)}
             className="filter-select"
           >
@@ -187,8 +189,8 @@ const HabitList = () => {
         </div>
 
         <div className="sort">
-          <select 
-            value={sortBy} 
+          <select
+            value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             className="sort-select"
           >
@@ -208,7 +210,7 @@ const HabitList = () => {
             </Button>
           </div>
         ) : (
-          filteredHabits.map(habit => (
+          filteredHabits.map((habit) => (
             <HabitCard
               key={habit.id}
               habit={habit}

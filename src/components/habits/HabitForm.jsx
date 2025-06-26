@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import Button from '../ui/Button';
+import React, { useState, useEffect } from "react";
+import Button from "../ui/Button";
 
 const HabitForm = ({ habit, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
   });
 
   useEffect(() => {
     if (habit) {
       setFormData({
-        name: habit.name || '',
-        description: habit.description || '',
+        name: habit.name || "",
+        description: habit.description || "",
       });
     }
   }, [habit]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.name.trim()) {
-      alert('Habit name is required.');
+      alert("Habit name is required.");
       return;
     }
     onSubmit(formData);
@@ -32,8 +32,8 @@ const HabitForm = ({ habit, onSubmit, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit} className="habit-form">
-      <h2>{habit ? 'Edit Habit' : 'Create a New Habit'}</h2>
-      
+      <h2>{habit ? "Edit Habit" : "Create a New Habit"}</h2>
+
       <div className="form-group">
         <label htmlFor="name">Habit Name</label>
         <input
@@ -61,7 +61,7 @@ const HabitForm = ({ habit, onSubmit, onCancel }) => {
 
       <div className="form-actions">
         <Button type="submit" variant="primary">
-          {habit ? 'Save Changes' : 'Create Habit'}
+          {habit ? "Save Changes" : "Create Habit"}
         </Button>
         <Button type="button" onClick={onCancel} variant="secondary">
           Cancel
@@ -105,7 +105,7 @@ const HabitForm = ({ habit, onSubmit, onCancel }) => {
         .form-group textarea:focus {
           outline: none;
           border-color: #007bff;
-          box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+          box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
         }
         .form-actions {
           display: flex;

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -7,56 +7,56 @@ const Sidebar = () => {
 
   const navigationItems = [
     {
-      id: 'dashboard',
-      label: 'Dashboard',
-      path: '/',
-      icon: '📊'
+      id: "dashboard",
+      label: "Dashboard",
+      path: "/",
+      icon: "📊",
     },
     {
-      id: 'habits',
-      label: 'Habits',
-      path: '/habits',
-      icon: '✅'
+      id: "habits",
+      label: "Habits",
+      path: "/habits",
+      icon: "✅",
     },
     {
-      id: 'tracker',
-      label: 'Daily Tracker',
-      path: '/tracker',
-      icon: '📅'
+      id: "tracker",
+      label: "Daily Tracker",
+      path: "/tracker",
+      icon: "📅",
     },
     {
-      id: 'calendar',
-      label: 'Calendar',
-      path: '/calendar',
-      icon: '🗓️'
+      id: "calendar",
+      label: "Calendar",
+      path: "/calendar",
+      icon: "🗓️",
     },
     {
-      id: 'analytics',
-      label: 'Analytics',
-      path: '/analytics',
-      icon: '📈'
-    }
+      id: "analytics",
+      label: "Analytics",
+      path: "/analytics",
+      icon: "📈",
+    },
   ];
 
   const isActiveRoute = (path) => {
-    if (path === '/') {
-      return location.pathname === '/';
+    if (path === "/") {
+      return location.pathname === "/";
     }
     return location.pathname.startsWith(path);
   };
 
   return (
-    <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+    <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
       <div className="sidebar-header">
-        <h2 className={`sidebar-title ${isCollapsed ? 'hidden' : ''}`}>
+        <h2 className={`sidebar-title ${isCollapsed ? "hidden" : ""}`}>
           HabitTracker
         </h2>
         <button
           className="sidebar-toggle"
           onClick={() => setIsCollapsed(!isCollapsed)}
-          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          {isCollapsed ? '→' : '←'}
+          {isCollapsed ? "→" : "←"}
         </button>
       </div>
 
@@ -66,11 +66,11 @@ const Sidebar = () => {
             <li key={item.id} className="nav-item">
               <Link
                 to={item.path}
-                className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
-                title={isCollapsed ? item.label : ''}
+                className={`nav-link ${isActiveRoute(item.path) ? "active" : ""}`}
+                title={isCollapsed ? item.label : ""}
               >
                 <span className="nav-icon">{item.icon}</span>
-                <span className={`nav-label ${isCollapsed ? 'hidden' : ''}`}>
+                <span className={`nav-label ${isCollapsed ? "hidden" : ""}`}>
                   {item.label}
                 </span>
               </Link>
@@ -80,7 +80,7 @@ const Sidebar = () => {
       </nav>
 
       <div className="sidebar-footer">
-        <div className={`user-info ${isCollapsed ? 'hidden' : ''}`}>
+        <div className={`user-info ${isCollapsed ? "hidden" : ""}`}>
           <div className="user-avatar">👤</div>
           <div className="user-details">
             <span className="user-name">User</span>

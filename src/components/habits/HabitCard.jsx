@@ -1,12 +1,13 @@
-import React from 'react';
-import Button from '../ui/Button';
+import React from "react";
+import Button from "../ui/Button";
 
 const HabitCard = ({ habit, onComplete, onEdit, onDelete }) => {
-  const today = new Date().toISOString().split('T')[0];
-  const isCompletedToday = habit.completions && habit.completions.includes(today);
+  const today = new Date().toISOString().split("T")[0];
+  const isCompletedToday =
+    habit.completions && habit.completions.includes(today);
 
   return (
-    <div className={`habit-card ${isCompletedToday ? 'completed' : ''}`}>
+    <div className={`habit-card ${isCompletedToday ? "completed" : ""}`}>
       <div className="habit-info">
         <h3>{habit.name}</h3>
         <p>{habit.description}</p>
@@ -15,17 +16,24 @@ const HabitCard = ({ habit, onComplete, onEdit, onDelete }) => {
         </div>
       </div>
       <div className="habit-actions">
-        <Button onClick={onComplete} variant={isCompletedToday ? 'secondary' : 'primary'}>
-          {isCompletedToday ? 'Undo' : 'Complete'}
+        <Button
+          onClick={onComplete}
+          variant={isCompletedToday ? "secondary" : "primary"}
+        >
+          {isCompletedToday ? "Undo" : "Complete"}
         </Button>
-        <Button onClick={onEdit} variant="secondary">Edit</Button>
-        <Button onClick={onDelete} variant="danger">Delete</Button>
+        <Button onClick={onEdit} variant="secondary">
+          Edit
+        </Button>
+        <Button onClick={onDelete} variant="danger">
+          Delete
+        </Button>
       </div>
       <style jsx>{`
         .habit-card {
           background: #fff;
           border-radius: 8px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
           padding: 20px;
           display: flex;
           flex-direction: column;
@@ -34,7 +42,7 @@ const HabitCard = ({ habit, onComplete, onEdit, onDelete }) => {
         }
         .habit-card:hover {
           transform: translateY(-4px);
-          box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
         }
         .habit-card.completed {
           background-color: #f0fdf4;
